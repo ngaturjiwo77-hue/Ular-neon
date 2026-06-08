@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "Ular Neon",
+    "slug": "ular-neon",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "ularneon",
+    "userInterfaceStyle": "automatic",
+    "android": {
+      "package": "com.ularneon.game",
+      "adaptiveIcon": {
+        "backgroundColor": "#0A0A0C"
+      }
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
+
