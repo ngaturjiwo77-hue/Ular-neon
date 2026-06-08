@@ -26,11 +26,20 @@ jobs:
       - name: Rakit Lingkungan Expo yang Sehat
         run: |
           npx create-expo-app@latest build-env --yes
+          
+          # Buat folder secara paksa agar tidak error saat disalin
+          mkdir -p build-env/app build-env/src
           rm -rf build-env/app/*
-          cp -r app/* build-env/app/
-          cp -r src build-env/
+          
+          # Salin semua isi kode game Anda dari Termux ke lingkungan baru
+          cp -a app/. build-env/app/
+          cp -a src/. build-env/src/
+          
           cd build-env
           npx expo install @react-native-async-storage/async-storage
+          
+          # Atur nama APK secara otomatis
+          jq '.expo.name = "Ular Neon" | .expo.slug = "ular-neon" | .expo.android.package = "com.ularneon.game"' app.json > temp.json && mv temp.json app.json
 
       - name: Generate Android Native Folder
         run: |
