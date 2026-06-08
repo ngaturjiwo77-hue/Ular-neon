@@ -26,19 +26,12 @@ jobs:
       - name: Rakit Lingkungan Expo yang Sehat
         run: |
           npx create-expo-app@latest build-env --yes
-          
-          # Buat folder secara paksa agar tidak error saat disalin
           mkdir -p build-env/app build-env/src
           rm -rf build-env/app/*
-          
-          # Salin semua isi kode game Anda dari Termux ke lingkungan baru
           cp -a app/. build-env/app/
           cp -a src/. build-env/src/
-          
           cd build-env
           npx expo install @react-native-async-storage/async-storage
-          
-          # Atur nama APK secara otomatis
           jq '.expo.name = "Ular Neon" | .expo.slug = "ular-neon" | .expo.android.package = "com.ularneon.game"' app.json > temp.json && mv temp.json app.json
 
       - name: Generate Android Native Folder
@@ -46,14 +39,16 @@ jobs:
           cd build-env
           npx expo prebuild --platform android --clean
 
-      - name: Build APK (Debug Version)
+      - name: Build APK (Release Version Offline)
         run: |
           cd build-env/android
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon
+          # PERUBAHAN UTAMA: assembleRelease untuk menjadikannya offline
+          ./gradlew assembleRelease --no-daemon
 
       - name: Upload APK to GitHub Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: UlarNeon-Debug-APK
-          path: build-env/android/app/build/outputs/apk/debug/app-debug.apk
+          name: UlarNeon-Release-APK
+          # Pastikan mengambil file dari folder release
+          path: build-env/android/app/build/outputs/apk/release/app-release.apk
